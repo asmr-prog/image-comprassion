@@ -3,135 +3,137 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Image Compressor - Fast & Responsive</title>
-  <meta name="description" content="Compress and optimize your images instantly with high-quality results. Free, fast, and fully responsive image compressor tool." />
+  <meta name="description" content="Fast and responsive image compressor tool allowing users to set custom quality levels and instantly preview results." />
+  <title>Responsive Image Compressor</title>
   <style>
-    * { box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; margin: 0; background: #f5f7fa; color: #333; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-    header { text-align: center; padding: 20px; background: #0d6efd; color: #fff; width: 100%; }
-    .container { max-width: 800px; width: 100%; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 0 15px rgba(0,0,0,0.1); margin: 20px; }
-    h1 { margin-bottom: 10px; }
-    .upload-area { border: 2px dashed #0d6efd; border-radius: 12px; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; background: #f9f9f9; }
-    .upload-area:hover { background: #eef4ff; }
-    input[type=file] { display: none; }
-    .preview { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; justify-content: center; }
-    .preview img { max-width: 180px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.2); transition: 0.3s; }
-    .preview img:hover { transform: scale(1.05); }
-    .controls { margin-top: 20px; text-align: center; }
-    label { font-weight: 600; }
-    input[type=range] { width: 80%; margin: 10px 0; }
-    .download-area { text-align: center; margin-top: 20px; }
-    button { background: #0d6efd; border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-    button:hover { background: #094cb7; }
-    @media (max-width: 600px) { .preview img { max-width: 100%; } }
+    *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
+    body{margin:0;padding:0;background:#f5f5f5;color:#333;}
+    header{background:#007bff;color:white;text-align:center;padding:20px 10px;}
+    main{max-width:900px;margin:30px auto;padding:20px;background:#fff;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+    .uploader{border:2px dashed #007bff;border-radius:10px;padding:30px;text-align:center;cursor:pointer;transition:0.3s;}
+    .uploader:hover{background:#eef5ff;}
+    #preview{display:flex;flex-wrap:wrap;gap:20px;justify-content:center;margin-top:20px;}
+    .img-card{background:#fafafa;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);padding:10px;text-align:center;}
+    .img-card img{max-width:200px;border-radius:8px;display:block;margin:auto;}
+    .controls{margin-top:20px;text-align:center;}
+    input[type=range]{width:80%;max-width:400px;}
+    .adsense{margin:20px auto;text-align:center;background:#f0f0f0;padding:10px;border-radius:8px;min-height:90px;}
+    button{background:#007bff;color:white;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;transition:0.3s;}
+    button:hover{background:#0056b3;}
+    @media(max-width:600px){.img-card img{max-width:100px;}}
   </style>
 </head>
 <body>
   <header>
-    <h1>Smart Image Compressor</h1>
-    <p>Compress images instantly while keeping the best quality!</p>
+    <h1>Responsive Image Compressor</h1>
   </header>
-
-  <div class="container">
-    <div class="upload-area" id="uploadArea">
-      <p>📁 Drag & Drop or Click to Upload Image</p>
-      <input type="file" id="imageInput" accept="image/*" multiple />
+  <main>
+    <div class="adsense">Advertisement Space (Google AdSense)</div>
+    <div class="uploader" id="drop-area">
+      <p>Click or Drag & Drop Images Here</p>
+      <input type="file" id="fileElem" accept="image/*" multiple style="display:none;" />
     </div>
-
     <div class="controls">
-      <label for="quality">Compression Level (0.1 - 1.0):</label><br>
-      <input type="range" id="quality" min="0.1" max="1" step="0.1" value="0.8">
-      <span id="qualityValue">0.8</span>
-      <br>
+      <label for="quality">Compression Quality (0.1 - 1.0): </label>
+      <input type="range" id="quality" min="0.1" max="1" step="0.1" value="1">
+      <span id="qVal">1.0</span>
+      <br /><br />
       <button id="compressBtn">Compress Images</button>
     </div>
-
-    <div class="preview" id="preview"></div>
-
-    <div class="download-area" id="downloadArea"></div>
-  </div>
-
-  <!-- Advertisement placeholder (replace with AdSense code) -->
-  <div id="adsense" style="margin: 20px auto; text-align: center;">
-    <!-- Example: <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXX" data-ad-slot="YYYYYY"></ins> -->
-  </div>
+    <div id="preview"></div>
+    <div class="adsense">Advertisement Space (Google AdSense)</div>
+  </main>
 
   <script>
-    const uploadArea = document.getElementById('uploadArea');
-    const imageInput = document.getElementById('imageInput');
+    const fileElem = document.getElementById('fileElem');
+    const dropArea = document.getElementById('drop-area');
     const preview = document.getElementById('preview');
     const qualityInput = document.getElementById('quality');
-    const qualityValue = document.getElementById('qualityValue');
+    const qVal = document.getElementById('qVal');
     const compressBtn = document.getElementById('compressBtn');
-    const downloadArea = document.getElementById('downloadArea');
     let images = [];
 
-    uploadArea.addEventListener('click', () => imageInput.click());
-    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.background = '#e6f0ff'; });
-    uploadArea.addEventListener('dragleave', () => uploadArea.style.background = '#f9f9f9');
-    uploadArea.addEventListener('drop', e => {
-      e.preventDefault();
-      uploadArea.style.background = '#f9f9f9';
-      handleFiles(e.dataTransfer.files);
+    qualityInput.addEventListener('input', () => {
+      qVal.textContent = qualityInput.value;
     });
 
-    imageInput.addEventListener('change', e => handleFiles(e.target.files));
-    qualityInput.addEventListener('input', () => qualityValue.textContent = qualityInput.value);
+    dropArea.addEventListener('click', ()=> fileElem.click());
+    fileElem.addEventListener('change', handleFiles);
 
-    function handleFiles(files) {
-      preview.innerHTML = '';
-      images = Array.from(files);
-      images.forEach(file => {
+    dropArea.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropArea.style.background='#eef5ff';
+    });
+
+    dropArea.addEventListener('dragleave', e => {
+      e.preventDefault();
+      dropArea.style.background='';
+    });
+
+    dropArea.addEventListener('drop', e => {
+      e.preventDefault();
+      dropArea.style.background='';
+      handleFiles({ target:{ files:e.dataTransfer.files }});
+    });
+
+    function handleFiles(event){
+      const files = event.target.files;
+      preview.innerHTML='';
+      images = [];
+      for(let file of files){
+        if(!file.type.startsWith('image/')) continue;
         const reader = new FileReader();
         reader.onload = e => {
           const img = document.createElement('img');
           img.src = e.target.result;
-          preview.appendChild(img);
-        };
+          const div = document.createElement('div');
+          div.className='img-card';
+          div.appendChild(img);
+          preview.appendChild(div);
+          images.push({file, imgEl:img});
+        }
         reader.readAsDataURL(file);
-      });
+      }
     }
 
-    compressBtn.addEventListener('click', async () => {
-      if (images.length === 0) return alert('Please upload some images first!');
-      preview.innerHTML = '';
-      downloadArea.innerHTML = '';
-
-      for (const file of images) {
-        const img = await loadImage(file);
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        const quality = parseFloat(qualityInput.value);
-        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-        const compressedImg = document.createElement('img');
-        compressedImg.src = compressedDataUrl;
-        preview.appendChild(compressedImg);
-
-        const downloadLink = document.createElement('a');
-        downloadLink.href = compressedDataUrl;
-        downloadLink.download = 'compressed-' + file.name;
-        downloadLink.textContent = 'Download ' + file.name;
-        downloadLink.style.display = 'block';
-        downloadLink.style.margin = '10px';
-        downloadArea.appendChild(downloadLink);
+    compressBtn.addEventListener('click', ()=>{
+      const quality = parseFloat(qualityInput.value);
+      if(images.length === 0){
+        alert('Please upload images first!');
+        return;
       }
-    });
-
-    function loadImage(file) {
-      return new Promise((resolve, reject) => {
+      preview.innerHTML='';
+      images.forEach(({file})=>{
         const reader = new FileReader();
         reader.onload = e => {
           const img = new Image();
-          img.onload = () => resolve(img);
-          img.onerror = reject;
+          img.onload = ()=>{
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img,0,0);
+            const compressedData = canvas.toDataURL('image/jpeg', quality);
+            const outImg = new Image();
+            outImg.src = compressedData;
+            const div = document.createElement('div');
+            div.className='img-card';
+            div.innerHTML = `<p>${file.name}</p>`;
+            div.appendChild(outImg);
+            const downloadBtn = document.createElement('a');
+            downloadBtn.href = compressedData;
+            downloadBtn.download = 'compressed_'+file.name;
+            downloadBtn.textContent = 'Download';
+            downloadBtn.style.display='block';
+            downloadBtn.style.marginTop='10px';
+            div.appendChild(downloadBtn);
+            preview.appendChild(div);
+          }
           img.src = e.target.result;
-        };
+        }
         reader.readAsDataURL(file);
       });
-    }
+    });
   </script>
 </body>
 </html>
